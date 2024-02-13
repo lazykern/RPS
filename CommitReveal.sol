@@ -4,23 +4,23 @@ pragma solidity >=0.8.2 <0.9.0;
 
 contract CommitReveal {
 
-  uint8 public max = 100;
+  uint8 internal max = 100;
 
   struct Commit {
     bytes32 commit;
     bool revealed;
   }
 
-  mapping (address => Commit) public commits;
+  mapping (address => Commit) internal commits;
 
-  function commit(bytes32 dataHash) public {
+  function commit(bytes32 dataHash) internal {
     commits[msg.sender].commit = dataHash;
     commits[msg.sender].revealed = false;
     emit CommitHash(msg.sender,commits[msg.sender].commit);
   }
   event CommitHash(address sender, bytes32 dataHash);
 
-  function revealAnswer(bytes32 answer, bytes32 salt) public {
+  function revealAnswer(bytes32 answer, bytes32 salt) internal {
     //make sure it hasn't been revealed yet and set it to revealed
     require(commits[msg.sender].revealed==false,"CommitReveal::revealAnswer: Already revealed");
     commits[msg.sender].revealed=true;
@@ -30,7 +30,7 @@ contract CommitReveal {
   }
   event RevealAnswer(address sender, bytes32 answer, bytes32 salt);
 
-  function getSaltedHash(bytes32 data,bytes32 salt) public view returns(bytes32){
+  function getSaltedHash(bytes32 data,bytes32 salt) internal view returns(bytes32){
     return keccak256(abi.encodePacked(address(this), data, salt));
   }
 }
