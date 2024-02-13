@@ -146,5 +146,7 @@ contract RPS is CommitReveal {
         numCommit = 0;
         numRevealed = 0;
         latestActionTimestamp = 0;
+        player[0] = Player(Choice(0), address(0), 0);
+        player[1] = Player(Choice(0), address(0), 0);
     }
 }
