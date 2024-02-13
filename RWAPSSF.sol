@@ -4,15 +4,10 @@ pragma solidity >=0.7.0 <0.9.0;
 import "./CommitReveal.sol";
 
 contract RPS is CommitReveal {
-    // 0 - Rock
-    // 1 - Water
-    // 2 - Air
-    // 3 - Paper
-    // 4 - Sponge
-    // 5 - Scissors
-    // 6 - Fire
+    enum Choice { Rock, Water, Air, Paper, Sponge, Scissors, Fire }
+
     struct Player {
-        uint256 choice;
+        Choice choice;
         address addr;
         uint256 fund;
     }
@@ -41,19 +36,21 @@ contract RPS is CommitReveal {
         latestActionTimestamp = block.timestamp;
     }
 
-    function getChoiceHash(uint256 choice, uint256 salt)
+    function getChoiceHash(Choice choice, uint256 salt)
         public
         view
         returns (bytes32)
     {
         require(uint256(choice) <= 6, "Invalid choice");
-        return getSaltedHash(bytes32(choice), bytes32(salt));
+        return getSaltedHash(bytes32(uint256(choice)), bytes32(salt));
     }
 
     function commitChoice(bytes32 choiceHash) public {
         require(choiceHash != 0, "Invalid choice hash");
-        require(player[0].addr != address(0) && player[1].addr != address(0), "Not enough players");
+        require(numPlayer < 2, "Not enough players");
         require(msg.sender == player[playerIdx[msg.sender]].addr, "Invalid sender");
+        require(commits[msg.sender].commit == 0, "Already committed");
+        require(!commits[msg.sender].revealed, "Already revealed");
 
         commit(choiceHash);
 
@@ -62,14 +59,14 @@ contract RPS is CommitReveal {
         latestActionTimestamp = block.timestamp;
     }
 
-    function revealChoice(uint256 choice, uint256 salt) public {
+    function revealChoice(Choice choice, uint256 salt) public {
         require(uint256(choice) <= 6, "Invalid choice");
         require(numPlayer == 2, "Not enough players");
         require(numCommit == 2, "Not all players have committed");
         require(msg.sender == player[playerIdx[msg.sender]].addr, "Invalid sender");
 
 
-        revealAnswer(bytes32(choice), bytes32(salt));
+        revealAnswer(bytes32(uint256(choice)), bytes32(salt));
         player[playerIdx[msg.sender]].choice = choice;
 
         numRevealed++;
@@ -82,8 +79,8 @@ contract RPS is CommitReveal {
     }
 
     function _checkWinnerAndPay() private {
-        uint256 p0Choice = player[0].choice;
-        uint256 p1Choice = player[1].choice;
+        uint256 p0Choice = uint256(player[0].choice);
+        uint256 p1Choice = uint256(player[1].choice);
         address payable account0 = payable(player[0].addr);
         address payable account1 = payable(player[1].addr);
 
