@@ -29,8 +29,8 @@ contract RPS is CommitReveal {
     uint256 public latestActionTimestamp = 0;
 
     function addPlayer() public payable {
-        require(numPlayer < 2);
-        require(msg.value == 1 ether);
+        require(numPlayer < 2, "Maximum number of players reached");
+        require(msg.value == 1 ether, "Insufficient or excessive amount sent");
 
         reward += msg.value;
         player[numPlayer].fund = msg.value;
@@ -46,14 +46,14 @@ contract RPS is CommitReveal {
         view
         returns (bytes32)
     {
-        require(choice <= 6);
+        require(uint256(choice) <= 6, "Invalid choice");
         return getSaltedHash(bytes32(choice), bytes32(salt));
     }
 
     function commitChoice(bytes32 choiceHash) public {
-        require(numPlayer == 2);
-        require(msg.sender == player[playerIdx[msg.sender]].addr);
-        require(choiceHash != 0);
+        require(choiceHash != 0, "Invalid choice hash");
+        require(player[0].addr != address(0) && player[1].addr != address(0), "Not enough players");
+        require(msg.sender == player[playerIdx[msg.sender]].addr, "Invalid sender");
 
         commit(choiceHash);
 
@@ -63,10 +63,11 @@ contract RPS is CommitReveal {
     }
 
     function revealChoice(uint256 choice, uint256 salt) public {
-        require(choice <= 6);
-        require(numPlayer == 2);
-        require(numCommit == 2);
-        require(msg.sender == player[playerIdx[msg.sender]].addr);
+        require(uint256(choice) <= 6, "Invalid choice");
+        require(numPlayer == 2, "Not enough players");
+        require(numCommit == 2, "Not all players have committed");
+        require(msg.sender == player[playerIdx[msg.sender]].addr, "Invalid sender");
+
 
         revealAnswer(bytes32(choice), bytes32(salt));
         player[playerIdx[msg.sender]].choice = choice;
@@ -85,6 +86,7 @@ contract RPS is CommitReveal {
         uint256 p1Choice = player[1].choice;
         address payable account0 = payable(player[0].addr);
         address payable account1 = payable(player[1].addr);
+
         if ((p0Choice + 1) % 7 == p1Choice || (p0Choice + 2) % 7 == p1Choice || (p0Choice + 3) % 7 == p1Choice) {
             account1.transfer(reward);
         } else if ((p1Choice + 1) % 7 == p0Choice || (p1Choice + 2) % 7 == p0Choice || (p1Choice + 3) % 7 == p0Choice) {
@@ -94,19 +96,15 @@ contract RPS is CommitReveal {
             account1.transfer(reward / 2);
         }
 
-        latestActionTimestamp = block.timestamp;
         _reset();
     }
     
-    function currentTime() public view returns(uint256) {
-        return block.timestamp;
-    } 
 
     function checkTimeout() public {
-        require(block.timestamp > latestActionTimestamp + TIMEOUT , "Time has not ran out yet");
-        require(msg.sender == player[0].addr || msg.sender == player[1].addr);
-        require(numPlayer > 0);
-        require(reward > 0);
+        require(block.timestamp > latestActionTimestamp + TIMEOUT, "Timeout has not occurred yet");
+        require(msg.sender == player[0].addr || msg.sender == player[1].addr, "Invalid sender");
+        require(numPlayer > 0, "No players registered");
+
 
         address payable account0 = payable(player[0].addr);
         address payable account1 = payable(player[1].addr);
@@ -118,8 +116,6 @@ contract RPS is CommitReveal {
             _reset();
             return;
         }
-        
-        require(numPlayer == 2);
         
         // Refund to all player if [any player doesn't commit in time]
         if (
