@@ -35,7 +35,6 @@ contract RPS is CommitReveal {
         reward += msg.value;
         player[numPlayer].fund = msg.value;
         player[numPlayer].addr = msg.sender;
-        player[numPlayer].choice = 0;
         playerIdx[msg.sender] = numPlayer;
         numPlayer++;
 
@@ -86,10 +85,10 @@ contract RPS is CommitReveal {
         uint256 p1Choice = player[1].choice;
         address payable account0 = payable(player[0].addr);
         address payable account1 = payable(player[1].addr);
-        if ((p0Choice + 4) % 3 == p1Choice || (p0Choice + 5) % 3 == p1Choice || (p0Choice +6) % 3 == p1Choice) {
-            account0.transfer(reward);
-        } else if ((p1Choice + 4) % 3 == p0Choice || (p1Choice + 5) % 3 == p0Choice || (p1Choice + 6) % 3 == p0Choice) {
+        if ((p0Choice + 1) % 7 == p1Choice || (p0Choice + 2) % 7 == p1Choice || (p0Choice + 3) % 7 == p1Choice) {
             account1.transfer(reward);
+        } else if ((p1Choice + 1) % 7 == p0Choice || (p1Choice + 2) % 7 == p0Choice || (p1Choice + 3) % 7 == p0Choice) {
+            account0.transfer(reward);
         } else {
             account0.transfer(reward / 2);
             account1.transfer(reward / 2);

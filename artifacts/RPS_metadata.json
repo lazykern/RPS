@@ -51,20 +51,27 @@
 			},
 			{
 				"inputs": [],
+				"name": "TIMEOUT",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "addPlayer",
 				"outputs": [],
 				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "dataHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "commit",
+				"inputs": [],
+				"name": "checkTimeout",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -83,24 +90,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "commits",
+				"inputs": [],
+				"name": "currentTime",
 				"outputs": [
 					{
-						"internalType": "bytes32",
-						"name": "commit",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bool",
-						"name": "revealed",
-						"type": "bool"
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -131,24 +127,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "data",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "salt",
-						"type": "bytes32"
-					}
-				],
-				"name": "getSaltedHash",
+				"inputs": [],
+				"name": "latestActionTimestamp",
 				"outputs": [
 					{
-						"internalType": "bytes32",
+						"internalType": "uint256",
 						"name": "",
-						"type": "bytes32"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -156,20 +141,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "max",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "numInput",
+				"name": "numCommit",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -225,6 +197,11 @@
 						"internalType": "address",
 						"name": "addr",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "fund",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -247,24 +224,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "answer",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "salt",
-						"type": "bytes32"
-					}
-				],
-				"name": "revealAnswer",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -312,7 +271,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"RPS.sol": "RPS"
+			"RWAPSSF.sol": "RPS"
 		},
 		"evmVersion": "shanghai",
 		"libraries": {},
@@ -327,19 +286,19 @@
 	},
 	"sources": {
 		"CommitReveal.sol": {
-			"keccak256": "0xda3c9f50e33f866bebbf20b595f59e67a261d1937233e694bdd115b408abd7d0",
+			"keccak256": "0x486ce4e24e274ba4e3e185b16859376e73cb44994f4371e1b07776980bfac9d2",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://bad23d3cf64b58cbbfbe5a9615e0e16b32882a152eb64c700804e6bb7cbf0a81",
-				"dweb:/ipfs/QmTKQPYvNdQuVbCDwxwaAvaS6Um5PFDsVpqXu27YSJqAKs"
+				"bzz-raw://818be094ac813098d63e1978b0ba359c0796d83f586408acac04a034a43973d1",
+				"dweb:/ipfs/QmUC1JWyoL7gfyoPmTRr47Cq5p38ndeTAtjxooF4WMeiDJ"
 			]
 		},
-		"RPS.sol": {
-			"keccak256": "0x296a1ab29bc0f27cb7871284840e559a7d49e17d1eb0be5b7fe27f429101e2ba",
+		"RWAPSSF.sol": {
+			"keccak256": "0x86fdeeb3fde2cf9a3ec541e9798a52d0b067d7e7f8ddb4fe2e1f95e897797aa7",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://1f3e8fc3ae1217a78f9b36fdb4516ed3c199047febc144fe89df95a970c1a96b",
-				"dweb:/ipfs/QmfTAKhdTHBCMnTdNdxxb3g5qXyU13UZp2T5MdYFC5WDPS"
+				"bzz-raw://7e3a28114094d3f6314b20b205cab02a04f754a3f7ffc74befe475cf21179bae",
+				"dweb:/ipfs/QmX7RBadxQLvkBa7f92b2Use2FEKHKCi4TkAdvE3mePcNF"
 			]
 		}
 	},
