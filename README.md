@@ -14,8 +14,8 @@ To solve this problem, we use a **commit-reveal mechanism**. The players commits
 
 See also:
 
-- 34ad55f10b3a5d1e851ceb172ed2aca26286c401
-- 0a91264437eafef5526f1f65d100332ab67e2fc1
+- https://github.com/lazykern/RWAPSSF/commit/34ad55f10b3a5d1e851ceb172ed2aca26286c401
+- https://github.com/lazykern/RWAPSSF/commit/0a91264437eafef5526f1f65d100332ab67e2fc1
 
 ### Fund holding problem
 
@@ -30,9 +30,9 @@ To solve this problem, we use a **timeout mechanism**.
 
 See also:
 
-- 5404bf01186cda8c6a86527f610fc416ce4a3f0c
-- f16c5b5659cd145b5ccdf0a4540241045fcef5ed
-- e121524b7e923a3d733d52f579f2df220a121d72
+- https://github.com/lazykern/RWAPSSF/commit/5404bf01186cda8c6a86527f610fc416ce4a3f0c
+- https://github.com/lazykern/RWAPSSF/commit/f16c5b5659cd145b5ccdf0a4540241045fcef5ed
+- https://github.com/lazykern/RWAPSSF/commit/e121524b7e923a3d733d52f579f2df220a121d72
 
 ## Snapshots
 
