@@ -12,7 +12,7 @@ contract RPS is CommitReveal {
         uint256 fund;
     }
 
-    uint256 public constant TIMEOUT = 10 seconds;
+    uint256 public constant TIMEOUT = 1 days;
 
     mapping(uint256 => Player) public player;
     mapping(address => uint256) public playerIdx;
@@ -147,6 +147,6 @@ contract RPS is CommitReveal {
         numRevealed = 0;
         latestActionTimestamp = 0;
         player[0] = Player(Choice(0), address(0), 0);
-        player[1] = Player(Choice(0), address(0), 0);
+        player[1] = Player(Choice(0), address(0), 0);k
     }
 }
