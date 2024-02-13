@@ -4,8 +4,15 @@ pragma solidity >=0.7.0 <0.9.0;
 import "./CommitReveal.sol";
 
 contract RPS is CommitReveal {
+    // 0 - Rock
+    // 1 - Water
+    // 2 - Air
+    // 3 - Paper
+    // 4 - Sponge
+    // 5 - Scissors
+    // 6 - Fire
     struct Player {
-        uint256 choice; // 0 - Rock, 1 - Paper , 2 - Scissors, 3 - undefined
+        uint256 choice;
         address addr;
         uint256 fund;
     }
@@ -28,7 +35,7 @@ contract RPS is CommitReveal {
         reward += msg.value;
         player[numPlayer].fund = msg.value;
         player[numPlayer].addr = msg.sender;
-        player[numPlayer].choice = 3;
+        player[numPlayer].choice = 0;
         playerIdx[msg.sender] = numPlayer;
         numPlayer++;
 
@@ -40,6 +47,7 @@ contract RPS is CommitReveal {
         view
         returns (bytes32)
     {
+        require(choice <= 6);
         return getSaltedHash(bytes32(choice), bytes32(salt));
     }
 
@@ -56,7 +64,7 @@ contract RPS is CommitReveal {
     }
 
     function revealChoice(uint256 choice, uint256 salt) public {
-        require(choice <= 3);
+        require(choice <= 6);
         require(numPlayer == 2);
         require(numCommit == 2);
         require(msg.sender == player[playerIdx[msg.sender]].addr);
@@ -78,10 +86,10 @@ contract RPS is CommitReveal {
         uint256 p1Choice = player[1].choice;
         address payable account0 = payable(player[0].addr);
         address payable account1 = payable(player[1].addr);
-        if ((p0Choice + 1) % 3 == p1Choice) {
-            account1.transfer(reward);
-        } else if ((p1Choice + 1) % 3 == p0Choice) {
+        if ((p0Choice + 4) % 3 == p1Choice || (p0Choice + 5) % 3 == p1Choice || (p0Choice +6) % 3 == p1Choice) {
             account0.transfer(reward);
+        } else if ((p1Choice + 4) % 3 == p0Choice || (p1Choice + 5) % 3 == p0Choice || (p1Choice + 6) % 3 == p0Choice) {
+            account1.transfer(reward);
         } else {
             account0.transfer(reward / 2);
             account1.transfer(reward / 2);
