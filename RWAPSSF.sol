@@ -47,7 +47,7 @@ contract RPS is CommitReveal {
 
     function commitChoice(bytes32 choiceHash) public {
         require(choiceHash != 0, "Invalid choice hash");
-        require(numPlayer < 2, "Not enough players");
+        require(numPlayer == 2, "Not enough players");
         require(msg.sender == player[playerIdx[msg.sender]].addr, "Invalid sender");
         require(commits[msg.sender].commit == 0, "Already committed");
         require(!commits[msg.sender].revealed, "Already revealed");
