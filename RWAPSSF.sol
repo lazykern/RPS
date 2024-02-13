@@ -104,7 +104,6 @@ contract RPS is CommitReveal {
 
 
         address payable account0 = payable(player[0].addr);
-        address payable account1 = payable(player[1].addr);
 
         // Refund to first player if [number of player is not enough]
         if (numPlayer < 2) {
@@ -113,12 +112,11 @@ contract RPS is CommitReveal {
             _reset();
             return;
         }
+
+        address payable account1 = payable(player[1].addr);
         
-        // Refund to all player if [any player doesn't commit in time]
-        if (
-            numCommit < 2 &&
-            (commits[account0].commit == 0 || commits[account1].commit == 0)
-        ) {
+        // Refund to all player if [any player doesn't commit in time] or [all players commit but not reveal]
+        if (numCommit < 2 || numRevealed == 0) {
             account0.transfer(player[0].fund);
             account1.transfer(player[1].fund);
             
