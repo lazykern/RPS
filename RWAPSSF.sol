@@ -14,6 +14,8 @@ contract RPS is CommitReveal {
 
     uint256 public constant TIMEOUT = 1 days;
 
+    uint256 public constant MAX_PLAYERS = 2;
+
     mapping(uint256 => Player) public player;
     mapping(address => uint256) public playerIdx;
  
@@ -24,7 +26,7 @@ contract RPS is CommitReveal {
     uint256 public latestActionTimestamp = 0;
 
     function addPlayer() public payable {
-        require(numPlayer < 2, "Maximum number of players reached");
+        require(numPlayer < MAX_PLAYERS, "Maximum number of players reached");
         require(msg.value == 1 ether, "Insufficient or excessive amount sent");
 
         reward += msg.value;
@@ -47,7 +49,7 @@ contract RPS is CommitReveal {
 
     function commitChoice(bytes32 choiceHash) public {
         require(choiceHash != 0, "Invalid choice hash");
-        require(numPlayer == 2, "Not enough players");
+        require(numPlayer == MAX_PLAYERS, "Not enough players");
         require(msg.sender == player[playerIdx[msg.sender]].addr, "Invalid sender");
         require(commits[msg.sender].commit == 0, "Already committed");
         require(!commits[msg.sender].revealed, "Already revealed");
@@ -61,8 +63,8 @@ contract RPS is CommitReveal {
 
     function revealChoice(Choice choice, uint256 salt) public {
         require(uint256(choice) <= 6, "Invalid choice");
-        require(numPlayer == 2, "Not enough players");
-        require(numCommit == 2, "Not all players have committed");
+        require(numPlayer == MAX_PLAYERS, "Not enough players");
+        require(numCommit == MAX_PLAYERS, "Not all players have committed");
         require(msg.sender == player[playerIdx[msg.sender]].addr, "Invalid sender");
 
 
@@ -71,7 +73,7 @@ contract RPS is CommitReveal {
 
         numRevealed++;
 
-        if (numRevealed == 2) {
+        if (numRevealed == MAX_PLAYERS) {
             _checkWinnerAndPay();
         }
 
@@ -106,7 +108,7 @@ contract RPS is CommitReveal {
         address payable account0 = payable(player[0].addr);
 
         // Refund to first player if [number of player is not enough]
-        if (numPlayer < 2) {
+        if (numPlayer < MAX_PLAYERS) {
             account0.transfer(reward);
             
             _reset();
@@ -116,7 +118,7 @@ contract RPS is CommitReveal {
         address payable account1 = payable(player[1].addr);
         
         // Refund to all player if [any player doesn't commit in time] or [all players commit but not reveal]
-        if (numCommit < 2 || numRevealed == 0) {
+        if (numCommit < MAX_PLAYERS || numRevealed == 0) {
             account0.transfer(player[0].fund);
             account1.transfer(player[1].fund);
             
