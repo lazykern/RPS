@@ -51,6 +51,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "MAX_PLAYERS",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "TIMEOUT",
 				"outputs": [
 					{
@@ -90,24 +103,11 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "currentTime",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "enum RPS.Choice",
 						"name": "choice",
-						"type": "uint256"
+						"type": "uint8"
 					},
 					{
 						"internalType": "uint256",
@@ -189,9 +189,9 @@
 				"name": "player",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "enum RPS.Choice",
 						"name": "choice",
-						"type": "uint256"
+						"type": "uint8"
 					},
 					{
 						"internalType": "address",
@@ -229,9 +229,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "enum RPS.Choice",
 						"name": "choice",
-						"type": "uint256"
+						"type": "uint8"
 					},
 					{
 						"internalType": "uint256",
@@ -294,11 +294,11 @@
 			]
 		},
 		"RWAPSSF.sol": {
-			"keccak256": "0x86fdeeb3fde2cf9a3ec541e9798a52d0b067d7e7f8ddb4fe2e1f95e897797aa7",
+			"keccak256": "0xf84de7138058fabb240a125f556626fca2db9ba9a710c1af2cc81d7cebdde2b4",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://7e3a28114094d3f6314b20b205cab02a04f754a3f7ffc74befe475cf21179bae",
-				"dweb:/ipfs/QmX7RBadxQLvkBa7f92b2Use2FEKHKCi4TkAdvE3mePcNF"
+				"bzz-raw://90befbeb28aa877e77a0e55d7a26c3b8b7061fac84cc0c9c6ab276bfbd240b84",
+				"dweb:/ipfs/Qmf6RiZNs38stgNfFKUW6hrXtkZke3AhJo5FRUsYn2yqSX"
 			]
 		}
 	},

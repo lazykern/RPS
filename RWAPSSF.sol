@@ -83,7 +83,7 @@ contract RPS is CommitReveal {
         uint256 p0Choice = uint256(player[0].choice);
         uint256 p1Choice = uint256(player[1].choice);
         uint256 p2Choice = uint256(player[2].choice);
-        uint256[] points = new uint256[](3);
+        uint256[] memory points = new uint256[](3);
 
         // Win: +3, Draw: +1, Lose: +0
         // check with all players
@@ -129,11 +129,10 @@ contract RPS is CommitReveal {
 
     enum Result {WIN, LOSE, DRAW}
 
-    function _checkWin(uint256 p0Choice, uint256 p1Choice) private view returns(uint256) {
-        if ((p1Choice + 1) % 7 == p0Choice || (p1Choice + 2) % 7 == p0Choice || (p1Choice + 3) % 7 == p0Choice)
+    function _checkWin(uint256 p0Choice, uint256 p1Choice) private pure returns(uint256) {
+        if ((p1Choice + 1) % 7 == p0Choice || (p1Choice + 2) % 7 == p0Choice || (p1Choice + 3) % 7 == p0Choice) {
             return 3;
-        } else  {
-        if ((p0Choice + 1) % 7 == p1Choice || (p0Choice + 2) % 7 == p1Choice || (p0Choice + 3) % 7 == p1Choice) {
+        } else if ((p0Choice + 1) % 7 == p1Choice || (p0Choice + 2) % 7 == p1Choice || (p0Choice + 3) % 7 == p1Choice) {
             return 0;
         } else {
             return 1;
