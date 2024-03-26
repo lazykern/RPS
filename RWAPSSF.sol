@@ -180,7 +180,7 @@ contract RPS is CommitReveal {
             return;
         }
 
-        // Refund to all player if [not all players revealed]
+        // Refund to player that reveal if [all players reveal]
         if (numRevealed < 3) {
             for (uint256 i = 0; i < 3; i++) {
                 if (commits[player[i].addr].revealed) {
