@@ -14,7 +14,7 @@ contract RPS is CommitReveal {
 
     uint256 public constant TIMEOUT = 1 days;
 
-    uint256 public constant MAX_PLAYERS = 2;
+    uint256 public constant MAX_PLAYERS = 3;
 
     mapping(uint256 => Player) public player;
     mapping(address => uint256) public playerIdx;
@@ -67,7 +67,6 @@ contract RPS is CommitReveal {
         require(numCommit == MAX_PLAYERS, "Not all players have committed");
         require(msg.sender == player[playerIdx[msg.sender]].addr, "Invalid sender");
 
-
         revealAnswer(bytes32(uint256(choice)), bytes32(salt));
         player[playerIdx[msg.sender]].choice = choice;
 
@@ -83,25 +82,68 @@ contract RPS is CommitReveal {
     function _checkWinnerAndPay() private {
         uint256 p0Choice = uint256(player[0].choice);
         uint256 p1Choice = uint256(player[1].choice);
-        address payable account0 = payable(player[0].addr);
-        address payable account1 = payable(player[1].addr);
+        uint256 p2Choice = uint256(player[2].choice);
+        uint256[] points = new uint256[](3);
 
-        if ((p0Choice + 1) % 7 == p1Choice || (p0Choice + 2) % 7 == p1Choice || (p0Choice + 3) % 7 == p1Choice) {
-            account1.transfer(reward);
-        } else if ((p1Choice + 1) % 7 == p0Choice || (p1Choice + 2) % 7 == p0Choice || (p1Choice + 3) % 7 == p0Choice) {
-            account0.transfer(reward);
+        // Win: +3, Draw: +1, Lose: +0
+        // check with all players
+
+        points[0] = _checkWin(p0Choice, p1Choice);
+        points[0] = _checkWin(p0Choice, p2Choice);
+
+        points[1] = _checkWin(p1Choice, p0Choice);
+        points[1] = _checkWin(p1Choice, p2Choice);
+
+        points[2] = _checkWin(p2Choice, p0Choice);
+        points[2] = _checkWin(p2Choice, p1Choice);
+
+        uint256 maxPointCount = 0;
+        uint256 maxPoint = 0;
+        uint256 winner = 0;
+        for (uint256 i = 0; i < 3; i++) {
+            if (points[i] > maxPoint) {
+                maxPoint = points[i];
+                winner = i;
+            }
+            if (points[i] == maxPoint) {
+                maxPointCount += 1;
+            }
+        }
+
+        // if maxPointCount == 1, and pay to player that have maxPoint
+        // if maxPointCount > 1, and pay to player that have point == maxPoint
+        if (maxPointCount == 1) {
+            address payable account = payable(player[winner].addr);
+            account.transfer(reward);
         } else {
-            account0.transfer(reward / 2);
-            account1.transfer(reward / 2);
+            for (uint256 i = 0; i < 3; i++) {
+                if (points[i] == maxPoint) {
+                    address payable account = payable(player[i].addr);
+                    account.transfer(reward / maxPointCount);
+                }
+            }
         }
 
         _reset();
     }
-    
 
+    enum Result {WIN, LOSE, DRAW}
+
+    function _checkWin(uint256 p0Choice, uint256 p1Choice) private view returns(uint256) {
+        if ((p1Choice + 1) % 7 == p0Choice || (p1Choice + 2) % 7 == p0Choice || (p1Choice + 3) % 7 == p0Choice)
+            return 3;
+        } else  {
+        if ((p0Choice + 1) % 7 == p1Choice || (p0Choice + 2) % 7 == p1Choice || (p0Choice + 3) % 7 == p1Choice) {
+            return 0;
+        } else {
+            return 1;
+        }
+
+    }
+    
     function checkTimeout() public {
         require(block.timestamp > latestActionTimestamp + TIMEOUT, "Timeout has not occurred yet");
-        require(msg.sender == player[0].addr || msg.sender == player[1].addr, "Invalid sender");
+        require(msg.sender == player[0].addr || msg.sender == player[1].addr || msg.sender == player[2].addr, "Invalid sender");
         require(numPlayer > 0, "No players registered");
 
 
@@ -118,7 +160,7 @@ contract RPS is CommitReveal {
         address payable account1 = payable(player[1].addr);
         
         // Refund to all player if [any player doesn't commit in time] or [all players commit but not reveal]
-        if (numCommit < MAX_PLAYERS || numRevealed == 0) {
+        if (numCommit < 2 || numRevealed == 0) {
             account0.transfer(player[0].fund);
             account1.transfer(player[1].fund);
             
@@ -126,17 +168,28 @@ contract RPS is CommitReveal {
             return;
         }
 
-        // Punish if [a player doesn't reveal in time]
-        if (commits[account0].revealed && !commits[account1].revealed) {
-            account0.transfer(reward);
+        address payable account2 = payable(player[2].addr);
+        
+        // Refund to all player if [any player doesn't commit in time] or [all players commit but not reveal]
+        if (numCommit < 3 || numRevealed == 0) {
+            account0.transfer(player[0].fund);
+            account1.transfer(player[1].fund);
+            account2.transfer(player[2].fund);
             
             _reset();
             return;
-        } else if (commits[account1].revealed && !commits[account0].revealed) {
-            account1.transfer(reward);
-            
-            _reset();
-            return;
+        }
+
+        // Refund to all player if [not all players revealed]
+        if (numRevealed < 3) {
+            for (uint256 i = 0; i < 3; i++) {
+                if (commits[player[i].addr].revealed) {
+                    address payable account = payable(player[i].addr);
+                    account.transfer(player[i].fund);
+                } else {
+                    payable(msg.sender).transfer(player[i].fund);
+                }
+            }
         }
     }
 
@@ -148,7 +201,9 @@ contract RPS is CommitReveal {
         latestActionTimestamp = 0;
         delete commits[player[0].addr];
         delete commits[player[1].addr];
+        delete commits[player[2].addr];
         delete player[0];
         delete player[1];
+        delete player[2];
     }
 }
